@@ -42,7 +42,6 @@ fit_control <- trainControl(method = "repeatedcv",
                             number = 10,
                             verboseIter = TRUE)
 
-
 ##### Model training
 # Train model
 set.seed(321)
