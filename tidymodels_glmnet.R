@@ -16,6 +16,7 @@ train_splits <- rsample::vfold_cv(train, v = 10, repeats = 1, strata = NULL)
 # Munge data
 munge_steps <- recipes::recipe(SalePrice ~ ., data = train) %>% 
   update_role(Id, new_role = 'id_column') %>% 
+  step_log(all_outcomes(), all_numeric()) %>% # New Step
   step_medianimpute(all_numeric(), -Id, -SalePrice) %>%
   step_modeimpute(all_nominal()) %>%
   step_other(all_nominal(), threshold = 0.1, other = 'other') %>%
@@ -51,7 +52,7 @@ iterate_xgb_models <- function(df, mtry = 1, trees = 15, min_n = 1, tree_depth =
 }
 
 
-model_building <- function(input_data, mtry, trees, min_n, tree_depth, learn_rate, loss_reduction , sample_size) {
+model_building_xgb <- function(input_data, mtry, trees, min_n, tree_depth, learn_rate, loss_reduction , sample_size) {
   result <- input_data %>% 
     dplyr::mutate(model = purrr::pmap(.l = list(train_transformed, mtry, trees, min_n, tree_depth, learn_rate, loss_reduction, sample_size),
                                       .f = ~ iterate_models(df = ..1, trees = ..2, tree_depth = ..3)))
