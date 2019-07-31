@@ -1,4 +1,5 @@
-# Define helper functions
+########## Old helper functions (pre-tidymodels) ##########
+
 clean_factor_variables <- function(df, frequency_threshold = 0.01) {
   # Initialize result object
   result <- list()
